@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row align-items-center mb-5">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold text-success mb-3">¿Por qué cuidar nuestro hogar?</h1>
+        <p class="lead text-muted">
+            El medio ambiente no es solo naturaleza; es el sistema que sustenta nuestra economía, 
+            salud y sociedad.
+        </p>
+        <p>
+            Cada acción cuenta. Desde el aire que respiramos hasta el agua que bebemos, 
+            todo depende del equilibrio ecológico que hoy se encuentra amenazado por el cambio climático 
+            y la contaminación.
+        </p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+            <a href="/sistema-ambiental" class="btn btn-success btn-lg px-4 shadow hover-scale">
+                <i class="fas fa-book-open me-2"></i>Aprender más
+            </a>
+            <a href="/tres-r" class="btn btn-outline-success btn-lg px-4 shadow hover-scale">
+                <i class="fas fa-recycle me-2"></i>Actuar ahora
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6 mt-4 mt-lg-0">
+        <img src="/static/images/Inicio.jpg" 
+             class="img-fluid rounded-4 shadow-lg hover-scale" 
+             alt="Paisaje natural">
+    </div>
+</div>
+
+<hr class="my-5 text-success">
+
+<div class="row text-center">
+    <div class="col-md-4 mb-4">
+        <div class="p-4 border border-success border-opacity-25 rounded-3 bg-light hover-scale">
+            <i class="fas fa-temperature-high fa-3x text-warning mb-3"></i>
+            <h5>Calentamiento Global</h5>
+            <p class="small">El aumento de temperatura amenaza ecosistemas enteros.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="p-4 border border-success border-opacity-25 rounded-3 bg-light hover-scale">
+            <i class="fas fa-tint fa-3x text-primary mb-3"></i>
+            <h5>Escasez de Agua</h5>
+            <p class="small">Solo el 2.5% del agua del planeta es dulce.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="p-4 border border-success border-opacity-25 rounded-3 bg-light hover-scale">
+            <i class="fas fa-seedling fa-3x text-success mb-3"></i>
+            <h5>Deforestación</h5>
+            <p class="small">Perdemos millones de hectáreas de bosque al año.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

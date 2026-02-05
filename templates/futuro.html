@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5">
+    <h2 class="display-5 text-success fw-bold">El legado para el mañana</h2>
+    <p class="lead text-secondary">No heredamos la tierra de nuestros ancestros, la tomamos prestada de nuestros hijos.</p>
+</div>
+
+<div class="card border-0 shadow-lg overflow-hidden rounded-4 mb-5">
+    <img src="/static/images/Futuro.jpg" class="card-img-top hover-scale" alt="Futuro verde" style="max-height: 400px; object-fit: cover;">
+    <div class="card-body p-5">
+        <h3 class="card-title text-success"><i class="fas fa-globe-americas me-2"></i>Nuestra Responsabilidad</h3>
+        <p class="card-text fs-5">
+            Las decisiones que tomamos hoy impactarán directamente en la calidad de vida de las próximas generaciones. 
+            El cambio climático no es un problema del futuro, es una realidad presente que requiere acción inmediata.
+        </p>
+        
+        <div class="row mt-5">
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold text-muted">Uso de Energías Renovables</label>
+                <div class="progress mt-2" style="height: 10px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 45%"></div>
+                </div>
+                <small class="text-muted">Meta global para 2030 (Simulación)</small>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold text-muted">Reducción de Plásticos</label>
+                <div class="progress mt-2" style="height: 10px;">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 60%"></div>
+                </div>
+                <small class="text-muted">Progreso actual (Simulación)</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-success d-flex align-items-center rounded-3 shadow-sm" role="alert">
+    <i class="fas fa-lightbulb fa-2x me-3"></i>
+    <div>
+        <strong>¿Sabías que?</strong> Plantar un solo árbol puede absorber hasta 22kg de dióxido de carbono por año.
+    </div>
+</div>
+{% endblock %}
