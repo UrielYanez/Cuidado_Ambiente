@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+<div class="text-center mb-4">
+    <h2 class="text-success fw-bold">Localizador de Zonas Ambientales</h2>
+    <p class="text-muted">Busca ciudades para monitorear o encuentra tu ubicación actual.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow border-success h-100">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-search-location me-2"></i>Búsqueda Manual
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/puntos-verdes">
+                    <div class="mb-3">
+                        <label for="lugar" class="form-label">Nombre del lugar:</label>
+                        <input type="text" class="form-control" id="lugar" name="lugar" 
+                               placeholder="Ej. Dolores Hidalgo, Gto" required value="{{ lugar_buscado }}">
+                    </div>
+                    <button type="submit" class="btn btn-outline-success w-100 mb-3">
+                        <i class="fas fa-search me-2"></i>Buscar    
+                    </button>
+                </form>
+                
+                <hr>
+                
+                <button onclick="obtenerUbicacion()" class="btn btn-success w-100">
+                    <i class="fas fa-crosshairs me-2"></i>Mi Ubicación Actual
+                </button>
+
+                {% if error %}
+                    <div class="alert alert-danger mt-3">{{ error }}</div>
+                {% endif %}
+
+                {% if coords %}
+                    <div class="alert alert-info mt-3 small">
+                        <strong>Resultado API:</strong><br>
+                        {{ coords.display_name }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div id="map" class="rounded shadow border border-2 border-success" style="height: 500px;"></div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<script>
+    // 1. Inicializar el mapa
+    // Si Python mandó coordenadas, usarlas. Si no, centrar en México por defecto.
+    var latInicial = {{ coords.lat if coords else 21.15 }};
+    var lonInicial = {{ coords.lon if coords else -100.93 }};
+    var zoomInicial = {{ 13 if coords else 5 }};
+
+    var map = L.map('map').setView([latInicial, lonInicial], zoomInicial);
+
+    // 2. Capa base (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 3. Icono personalizado (Hoja verde para el tema ambiental)
+    var greenIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // 4. Si hay coordenadas desde Python, poner marcador
+    {% if coords %}
+        L.marker([latInicial, lonInicial], {icon: greenIcon})
+         .addTo(map)
+         .bindPopup("<b>Resultado de búsqueda:</b><br>{{ coords.display_name }}")
+         .openPopup();
+    {% endif %}
+
+    // 5. FUNCIÓN: Ubicación Actual (Geolocalización del Navegador)
+    function obtenerUbicacion() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                
+                // Mover mapa
+                map.setView([lat, lon], 15);
+                
+                // Poner marcador azul para usuario
+                L.marker([lat, lon]).addTo(map)
+                 .bindPopup("<b>¡Estás aquí!</b><br>Ubicación actual detectada.")
+                 .openPopup();
+                 
+            }, function(error) {
+                alert("No se pudo obtener tu ubicación. Asegúrate de dar permisos al navegador.");
+            });
+        } else {
+            alert("Tu navegador no soporta geolocalización.");
+        }
+    }
+
+    // 6. CONTROL DE BÚSQUEDA CON SUGERENCIAS (Tipo Google Maps)
+    // Esto añade la lupa en el mapa con autocompletado
+    L.Control.geocoder({
+        defaultMarkGeocode: false
+    })
+    .on('markgeocode', function(e) {
+        var bbox = e.geocode.bbox;
+        var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+        ]).addTo(map);
+        
+        map.fitBounds(poly.getBounds());
+        
+        L.marker(e.geocode.center, {icon: greenIcon})
+         .addTo(map)
+         .bindPopup(e.geocode.name)
+         .openPopup();
+    })
+    .addTo(map);
+
+</script>
+{% endblock %}  
